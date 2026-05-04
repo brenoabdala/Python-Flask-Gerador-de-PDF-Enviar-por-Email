@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Gerador Acadêmico</title>
+    <style>
+        body { font-family: sans-serif; background: #f4f7f6; display: flex; justify-content: center; padding: 40px; }
+        .box { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); width: 450px; }
+        textarea, input { width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
+        .btn-group { display: flex; flex-direction: column; gap: 10px; }
+        button { width: 100%; padding: 12px; border: none; border-radius: 4px; cursor: pointer; color: white; font-weight: bold; }
+        .btn-download { background: #27ae60; }
+        .btn-email { background: #e67e22; }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h2>Gestão de Boas-Vindas</h2>
+        
+        <!-- Formulário para Download (Binário) -->
+        <form action="/download" method="POST">
+            <textarea name="nomes" id="nomes" placeholder="Nomes (separados por vírgula ou linha)"></textarea>
+            
+            <div class="btn-group">
+                <button type="submit" class="btn-download">📥 BAIXAR PDF / ZIP</button>
+                
+                <input type="email" id="email_input" placeholder="E-mail de destino">
+                <button type="button" class="btn-email" onclick="enviarEmail()">📧 ENVIAR POR E-MAIL</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        async function enviarEmail() {
+            const payload = {
+                nomes: document.getElementById('nomes').value,
+                email: document.getElementById('email_input').value
+            };
+
+            const response = await fetch('/enviar_email', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(payload)
+            });
+
+            const result = await response.json();
+            alert(result.mensagem || "Erro ao enviar.");
+        }
+    </script>
+</body>
+</html>
